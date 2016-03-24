@@ -1,58 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Computational Visualistics</title>
+    <title>three.js webgl - materials - shaders [lava]</title>
     <meta charset="utf-8">
-    <link href='https://fonts.googleapis.com/css?family=Courgette' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <link href='css/format.css' rel='stylesheet' type='text/css'>
-    <link href='css/cg.css' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="css/format.css" rel="stylesheet">
 </head>
 
 <body>
-    <div id="mainScene">
-        <div id="header" name="header">
-            &middot; <span id="description">
-            UNIVERSITY OF KOBLENZ&middot;LANDAU</span> &middot;
-            <br><span id="pageTitle">COMPUTATIONAL VISUALISTICS</span></div>
+<audio id="audio" controls autoplay="true">
+  <source src="music/music.mp3" type="audio/mpeg" />
+
+Sorry - Ihre Browser hat keine Unterstützung für dieses Audio-Format.
+</audio>
+    <div id="container">
+        <div id="header">
+            <span class="big">Das Universum in der Murmel</span>
+            <br>
+            <span class="small">Aspekte der Bildgestaltung 2016 - Harald Britschgi</span>
+            <br><br><p id="hinweis">Klicke auf die Murmel!</p>
+        </div>
+        <div id="pcontainer">
+            <p>"O Gott, ich könnte in eine Nussschale eingesperrt sein und mich für einen König von unermesslichem Gebiete halten[...]"
+            </p>
+            <p class="smallquote">Hamlet, 2. Akt / William Shakespeare</p>
+            <br>
+
+
+        </div>
+        <div id="information_container"></div>
+        <div id="navigation">
+        </div>
     </div>
-    <div id="topNavigation">
     </div>
-    <div id="content">
-    </div>
-    <!--import Libraries-->
-    <script type="text/javascript" src="js/libs/dat.gui.min.js"></script>
     <script src="js/libs/three.js"></script>
-    <script src="js/libs/tween.min.js"></script>
     <script src="js/libs/jquery-1.11.3.min.js"></script>
-    <!--import MainScene-->
-    <script src="js/scenes/main/MainScene.js"></script>
-    <script src="js/scenes/main/MainSceneLinks.js"></script>
-    <script src="js/scenes/main/MainSceneLinkAbout.js"></script>
-    <script src="js/scenes/main/MainSceneLinkCG.js"></script>
-    <script src="js/scenes/main/MainSceneLinkAV.js"></script>
-    <script src="js/scenes/main/MainSceneLinkCL.js"></script>
-    <script src="js/scenes/main/MainSceneLinkMV.js"></script>
-    <!--import CGScene-->
-    <script src="js/scenes/cg/CGScene.js"></script>
-    <script src="js/scenes/cg/CGSceneDiscover0.js"></script>
-    <script src="js/scenes/cg/CGSceneDiscover1.js"></script>
-    <script src="js/scenes/cg/CGSceneDiscover2.js"></script>
-    <script src="js/scenes/cg/CGSceneDiscover3.js"></script>
-    <script src="js/scenes/cg/CGSceneAnimation.js"></script>
-    <!--import AVScene-->
-    <script src="js/scenes/av/AVScene.js"></script>
-    <!--import Utils-->
-    <script src="js/geometries/TextGeometry.js"></script>
-    <script src="js/geometries/RingGeometry.js"></script>
-    <script src="js/utils/FontUtils.js"></script>
-    <script src="js/fonts/helvetiker_regular.typeface.js"></script>
-    <script src="js/fonts/helvetiker_bold.typeface.js"></script>
-    <script src="js/utils/3PointLight.js"></script>
-    <script src="js/utils/threex.keyboardstate.js"></script>
-    <!--initialize Page-->
-    <script src="js/initStart.js"></script>
+    <script src="js/libs/tween.min.js"></script>
+    <script src="js/shaders/ConvolutionShader.js"></script>
+    <script src="js/shaders/CopyShader.js"></script>
+    <script src="js/shaders/FilmShader.js"></script>
+    <script src="js/postprocessing/EffectComposer.js"></script>
+    <script src="js/postprocessing/ShaderPass.js"></script>
+    <script src="js/postprocessing/MaskPass.js"></script>
+    <script src="js/postprocessing/RenderPass.js"></script>
+    <script src="js/postprocessing/BloomPass.js"></script>
+    <script src="js/postprocessing/FilmPass.js"></script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        uniform float time; uniform vec2 resolution; uniform float fogDensity; uniform vec3 fogColor; uniform sampler2D texture1; uniform sampler2D texture2; varying vec2 vUv; void main( void ) { vec2 position = -1.0 + 2.0 * vUv; vec4 noise = texture2D( texture1, vUv ); vec2 T1 = vUv + vec2( 1.5, -1.5 ) * time *0.02; vec2 T2 = vUv + vec2( -0.5, 2.0 ) * time * 0.01; T1.x += noise.x * 2.0; T1.y += noise.y * 2.0; T2.x -= noise.y * 0.2; T2.y += noise.z * 0.2; float p = texture2D( texture1, T1 * 2.0 ).a; vec4 color = texture2D( texture2, T2 * 2.0 ); vec4 temp = color * ( vec4( p, p, p, p ) * 2.0 ) + ( color * color - 0.1 ); if( temp.r > 1.0 ){ temp.bg += clamp( temp.r - 2.0, 0.0, 100.0 ); } if( temp.g > 1.0 ){ temp.rb += temp.g - 1.0; } if( temp.b > 1.0 ){ temp.rg += temp.b - 1.0; } gl_FragColor = temp; float depth = gl_FragCoord.z / gl_FragCoord.w; const float LOG2 = 1.442695; float fogFactor = exp2( - fogDensity * fogDensity * depth * depth * LOG2 ); fogFactor = 0.7 - clamp( fogFactor, 0.0, 1.0 ); gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor); }
+    </script>
+    <script id="vertexShader" type="x-shader/x-vertex">
+        uniform vec2 uvScale; varying vec2 vUv; void main() { vUv = uvScale * uv; vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); gl_Position = projectionMatrix * mvPosition; }
+    </script>
+    <!-- Planet Scripts -->
+    <script src="js/Sun.js"></script>
+    <script src="js/Earth.js"></script>
+    <script src="js/Mars.js"></script>
+    <script src="js/Venus.js"></script>
+    <script src="js/Mercury.js"></script>
+    <script src="js/Jupiter.js"></script>
+    <script src="js/Saturn.js"></script>
+    <script src="js/Uranus.js"></script>
+    <script src="js/Neptune.js"></script>
+    <!-- Main Scripts -->
+    <script src="js/Stars.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
