@@ -98,15 +98,12 @@ function flyToMainSceneLink(sphere) {
         .onComplete(function() {
             if (sphere == mainSceneLinkCGSphere) {
                 changeScene(mainScene, 'cg');
-                sceneNr = 1;
             }
             if (sphere == mainSceneLinkAVSphere) {
                 changeScene(mainScene, 'av');
-                sceneNr = 2;
             }
             if (sphere == mainSceneLinkMVSphere) {
                 changeScene(mainScene, 'mv');
-                sceneNr = 3;
             }
         })
         .start();

@@ -154,31 +154,13 @@ function updateSize() {
 }
 
 function changeScene(sceneOld, sceneNewToken) {
-    scene.remove(sceneOld);
-    if (sceneNewToken == 'cg') {
-        scene.remove(sceneOld);
-        initCGScene();
-        renderer.render(scene, camera);
-    }
-    if (sceneNewToken == 'av') {
-        initAVScene();
-        renderer.render(scene, camera);
-    }
-    if (sceneNewToken == 'mv') {
-        initMVScene();
-        renderer.render(scene, camera);
-    }
-}
-
-function backToMainScene() {
-    sceneNr = 0;
     if (avLocalMediaStream != null) {
         avLocalMediaStream.getTracks()[0].stop();
 
     }
 
     document.body.appendChild(renderer.domElement);
-    if (cameraFixed) {
+
         avSceneDiscoverNr = -1;
         renderer.autoClear = true;
         renderer.clear();
@@ -186,20 +168,72 @@ function backToMainScene() {
         renderer.setScissor(0, 0, WIDTH, HEIGHT);
         renderer.setViewport(0, 0, WIDTH, HEIGHT);
         camera.fov = 50;
-        camera.target = new THREE.Vector3( 0, 0, 0 );
+        camera.target = new THREE.Vector3(0, 0, 0);
         camera.aspect = WIDTH / HEIGHT;
         camera.updateProjectionMatrix();
-        $('#content').load('content/mainScene.html');
-        $('#description').html("UNIVERSIT&Auml;T KOBLENZ&middot;LANDAU");
-        $('#pageTitle').text("COMPUTERVISUALISTIK");
-        cameraFixed = true;
-        renderer.setClearColor(0x09528a, 1);
-        camera.position.set(0, 0, 450);
-        scene.remove(cgScene);
-        scene.remove(avScene);
-        scene.add(mainScene);
-        renderer.clearDepth();
-        renderer.clear();
-        renderer.render(scene, camera);
+
+        if (sceneOld === 'undef') {
+            if (sceneNr === 0) {
+                sceneOld = mainScene;
+            }
+            if (sceneNr === 1) {
+                sceneOld = cgScene;
+            }
+            if (sceneNr === 2) {
+                sceneOld = avScene;
+            }
+
+        }
+        if (sceneOld != 'undef') {
+            scene.remove(sceneOld);
+        }
+        if (sceneNewToken == 'cg') {
+            sceneNr = 1;
+            initCGScene();
+            renderer.render(scene, camera);
+        }
+        if (sceneNewToken == 'av') {
+            sceneNr = 2;
+            initAVScene();
+            renderer.render(scene, camera);
+        }
+        if (sceneNewToken == 'mv') {
+            sceneNr = 3;
+            initMVScene();
+            renderer.render(scene, camera);
+        }
     }
-}
+
+    function backToMainScene() {
+        sceneNr = 0;
+        if (avLocalMediaStream != null) {
+            avLocalMediaStream.getTracks()[0].stop();
+
+        }
+
+        document.body.appendChild(renderer.domElement);
+        if (cameraFixed) {
+            avSceneDiscoverNr = -1;
+            renderer.autoClear = true;
+            renderer.clear();
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setScissor(0, 0, WIDTH, HEIGHT);
+            renderer.setViewport(0, 0, WIDTH, HEIGHT);
+            camera.fov = 50;
+            camera.target = new THREE.Vector3(0, 0, 0);
+            camera.aspect = WIDTH / HEIGHT;
+            camera.updateProjectionMatrix();
+            $('#content').load('content/mainScene.html');
+            $('#description').html("UNIVERSIT&Auml;T KOBLENZ&middot;LANDAU");
+            $('#pageTitle').text("COMPUTERVISUALISTIK");
+            cameraFixed = true;
+            renderer.setClearColor(0x09528a, 1);
+            camera.position.set(0, 0, 450);
+            scene.remove(cgScene);
+            scene.remove(avScene);
+            scene.add(mainScene);
+            renderer.clearDepth();
+            renderer.clear();
+            renderer.render(scene, camera);
+        }
+    }

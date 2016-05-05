@@ -173,9 +173,9 @@ a.highlight:hover {
     background-color: rgb(3%, 20%, 33%);
     min-width: 180px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    border: 3px solid #ffffff;
+    border: 2px solid #ffffff;
     text-shadow: 1px 1px 0px rgba(255, 114, 0, 1);
-    color: #FFD800;
+    color: white;
     border-radius: 20px;
     font-size: 12px;
     left: -3px;
@@ -184,10 +184,42 @@ a.highlight:hover {
 
 .dropdown-menu ul, .dropdown-menu li{
     margin: 0;
-    margin-left: 15px;
     padding: 0;
     line-height: 30px;
+    width: 100%;
+    display: block;
+    text-align: center;
 }
+
+.dropdown-menu li{
+    cursor: pointer;
+}
+
+.dropdown-menu li.lighter{
+    background-color: #09528a;
+
+}
+
+.dropdown-menu li:hover{
+    -moz-box-shadow: inset 0px 1px 0px 0px #fafafa;
+    -webkit-box-shadow: inset 0px 1px 0px 0px #fafafa;
+    box-shadow: inset 0px 1px 0px 0px #fafafa;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffd900), color-stop(1, #ff8000));
+    background: -moz-linear-gradient(top, #ffd900 5%, #ff8000 100%);
+    background: -webkit-linear-gradient(top, #ffd900 5%, #ff8000 100%);
+    background: -o-linear-gradient(top, #ffd900 5%, #ff8000 100%);
+    background: -ms-linear-gradient(top, #ffd900 5%, #ff8000 100%);
+    background: linear-gradient(to bottom, #ffd900 5%, #ff8000 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffd900', endColorstr='#ff8000', GradientType=0);
+}
+.dropdown-menu li.last{
+    border-radius: 0 0 18px 18px;
+}
+
+.dropdown-menu li.first{
+    border-radius: 18px 18px 0 0;
+}
+
 .dropdown-menu:after,
 .dropdown-menu:before {
     bottom: 100%;
@@ -229,6 +261,6 @@ a.highlight:hover {
     width: 300px;
     position: absolute;
     left: 10%;
-    top: 30%;
+    top: 25%;
     display: none;
 }

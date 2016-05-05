@@ -46,7 +46,7 @@ function initMVScene() {
     $('#pageTitle').text("MEDICAL VISUALIZATION");
     $('#content').load("content/mv/mvSceneStart.html");
     cameraFixed = true;
-
+    sceneNr =3;
 
 }
 

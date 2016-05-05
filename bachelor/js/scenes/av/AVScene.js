@@ -36,7 +36,6 @@ function initAVScene() {
     renderer.setClearColor(0x000000);
     avScene = new THREE.Scene();
     scene.add(avScene);
-
     //Camera
     camera.position.set(0, 250, 450);
     camera.position.y += 125;

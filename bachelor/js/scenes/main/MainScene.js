@@ -373,8 +373,8 @@ function loadAboutSprites() {
         instituteSprites.add(sprite);
     });
 
-    instituteSprites.add(genBigSprite('COMPUTERFRAFIK', -120, -200, -30, "rgba(255,255,255, 1.0)"));
-    instituteSprites.add(genBigSprite('COMPUTERLIGUISTIK', 80, -200, -30, "rgba(255,255,255, 1.0)"));
+    instituteSprites.add(genBigSprite('COMPUTERGRAFIK', -120, -200, -30, "rgba(255,255,255, 1.0)"));
+    instituteSprites.add(genBigSprite('COMPUTERLINGUISTIK', 80, -200, -30, "rgba(255,255,255, 1.0)"));
 }
 
 
@@ -384,7 +384,7 @@ function genSprite(text, xPosition, yPosition) {
     structureCanvas.width = 1200;
     structureCanvas.height = 1200;
     var structureContext = structureCanvas.getContext('2d');
-    structureContext.font = 'bold 70px Montserrat';
+    structureContext.font = 'bold 70px Montserrat,Helvetica';
     structureContext.fillStyle = "rgba(255,255,255, 1.0)";
     structureContext.fillText(text, 10, 50);
 
@@ -404,7 +404,7 @@ function genProcentSprite(text, xPosition, yPosition) {
     structureCanvas.width = 1200;
     structureCanvas.height = 1200;
     var structureContext = structureCanvas.getContext('2d');
-    structureContext.font = 'bold 60px Montserrat';
+    structureContext.font = 'bold 60px Montserrat,Helvetica';
     structureContext.fillStyle = "rgba(255,255,255, 1.0)";
     structureContext.fillText(text, 5, 50);
 
@@ -425,7 +425,7 @@ function genBigSprite(text, xPosition, yPosition, zPosition, color) {
     structureCanvas.width = 1200;
     structureCanvas.height = 1200;
     var structureContext = structureCanvas.getContext('2d');
-    structureContext.font = 'bold 70px Montserrat';
+    structureContext.font = 'bold 70px Montserrat,Helvetica';
     structureContext.fillStyle = color;
     structureContext.fillText(text, 5, 50);
 
