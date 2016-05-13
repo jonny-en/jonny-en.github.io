@@ -1,0 +1,24 @@
+<video id="monitor" autoplay style="display:none; width: 320px; height: 240px;"></video>
+<div id="canvasLayers" style="position: relative; width:320px; height:240px; float:right">
+    <canvas id="videoCanvas" width="320" height="240" style="z-index: 1; position: absolute; left:0px; top:0px; opacity:0.5;"></canvas>
+    <canvas id="layer2" width="320" height="240" style="z-index: 2; position: absolute; left:0px; top:0px; opacity:0.5;"></canvas>
+</div>
+<canvas id="blendCanvas" style="display: none; position: relative; left: 320px; top: 240px; width: 320px; height: 240px;"></canvas>
+<div id="messageError"></div>
+<div id="messageArea" style="position: relative; left: 0px; top: 270px;"></div>
+<div id="avStartBox">
+    <div class="info">
+     <div class="highlightBig center">Movement Detection</div><br>
+        Every picture a camera takes is represented by <span class="highlight">a multidude of little pixels</span>, each with its very own color. To simply detect motion, the program that runs in the background has to figure out, whether the <span class="highlight">pixels at a specific location has changed</span> regarding their mean value.
+<br><br>
+        In this small example of movement detection you can control Lisa  <span class="highlight">with moving your finger over the particular field</span>.
+ 		on the webcam image.<br><br>
+        <span class="highlight">NOTICE:</span> You need to activate your <span class="highlight">webcam</span>. Make sure to accept the browsers usage of your camera on this site.
+    </div>
+</div>
+<div id="cgNavigation">
+    <a href="#" class="yellowbutton round active" onclick="avSceneDiscover0()">1</a>
+    <a href="#" class="yellowbutton round" onclick="avSceneDiscover1()">2</a>
+    <a href="#" class="yellowbutton round" onclick="avSceneDiscover2()">3</a>
+    <a href="#" class="highlight" onclick="avSceneDiscover1()">NEXT</a>
+</div>
