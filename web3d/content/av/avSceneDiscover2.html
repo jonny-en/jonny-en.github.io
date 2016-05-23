@@ -1,0 +1,38 @@
+<div class="avhalf left">
+    <div id="avDiscover2">
+        <div class="info">
+            <span class="highlightBig center">3: AUGMENTED REALITY</span>
+            <br>
+            <br> So wie Lisas Kamera eben Objekte zumindest grafisch herausstellen konnte, sind komplexere Programme f&auml;hig.<span class="highlight">Position und Lage</span> eines Objektes (z.B. einer Fl&auml;che) im Raum zu bestimmen. Der Computer kann dieses Wissen nutzen, um das Bild mit eigenen 3D-Elementen zu erweitern. Diese <span class="highlight">Verbindung von Realit&auml;t und Computergrafik</span> nennt man Augmented Reality. F&uuml;r dieses kleine Beispiel, ben&ouml;tigst du ein Handy, mit dem du folgendes Bild aufrufst:
+            <br>
+            <br><span class="highlight">http://jonny-en.github.io/marker.png</span>
+            <br>
+             (Alternativ kannst du das Bild auch ausdrucken)
+             <br>
+            <br> Das Programm erkennt den sogenannten Marker und erweitert dein Webcambild dann mit Lisa.
+             Lass sie mit den Pfeiltasten deiner Tastatur hin und her fahren.
+             <br>
+             Unten siehst du durch farbig eingeblendete Rechtecke, wo das im Hintergrund rechnende Programm den Marker vermutet
+             und wo er ihn tats&auml;chilig findet.
+        </div>
+    </div>
+</div>
+<div id="augmented">
+    <div class="container" id="video-container">
+        <video id="mainVideo" width="640" height="480" autoplay="autoplay" muted="true"></video>
+    </div>
+    <div class="container" id="canvas-container">
+        <canvas id="mainCanvas" width="640" height="480"></canvas>
+    </div>
+    <div class="container" id="debugCanvas-container">
+        <canvas id="debugCanvas" width="640" height="480"></canvas>
+    </div>
+    <div class="container" id="threejs-container">
+    </div>
+</div>
+<div id="cgNavigation">
+    <a href="#" class="highlight" onclick="avSceneDiscover2()">ZUR&Uuml;CK</a>
+    <a href="#" class="yellowbutton round" onclick="avSceneDiscover0()">1</a>
+    <a href="#" class="yellowbutton round" onclick="avSceneDiscover1()">2</a>
+    <a href="#" class="yellowbutton round active" onclick="avSceneDiscover2()">3</a>
+</div>

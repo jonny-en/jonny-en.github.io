@@ -1,0 +1,27 @@
+<div id="avBox2">
+    <div class="info">
+        <div class="highlightBig center">1: Bewegungsdetektion</div>
+        <br> Jedes Bild, dass eine Kamera aufnimmt, wird durch <span class="highlight">eine Vielzahl von kleinen Pixeln</span>, jedes davon besitzt seine eigene Farbe. Um auf einfachsten Wege Bewegung zu erkennen, muss das im Hintergrund laufende Programm also nur herausfinden, ob sich die <span class="highlight">Farbpunkte hinsichtlich ihres Mittelwerts</span> ver&auml;ndert haben. 
+        <br>
+        <br> In diesem kleinen Beispiel &uuml;ber Bewegungserkennung kannst du Lisa steuern, indem du <span class="highlight">deine Hand auf dem entsprechenden Symbol &uuml;ber dem Webcambild hin und her bewegst</span>.
+        <br>
+        <br>
+        <span class="highlight">WICHTIG:</span> Denke daran, deine <span class="highlight">Webcam zu aktivieren</span> und deren Nutzung &uuml;ber den Browser zu erlauben.
+        <br>
+        <br>
+        <video id="monitor" autoplay style="display:none; width: 320px; height: 240px; margin-right: 50px;"></video>
+        <div id="canvasLayers" style="position: relative; width:320px; height:240px; float:right; margin: 0 auto;">
+            <canvas id="blendCanvas" style="display: none; width: 320px; height: 240px; position: relative; top: 0;"></canvas>
+            <canvas id="videoCanvas" width="320" height="240" style="z-index: 1;  opacity:0.5; position: relative; top: 0;"></canvas>
+        </div>
+        <canvas id="layer2" width="320" height="240" style="z-index: 2;  opacity:0.5; position: absolute; margin-left: 80px"></canvas>
+        <div id="messageError"></div>
+        <div id="messageArea"></div>
+    </div>
+</div>
+<div id="cgNavigation">
+    <a href="#" class="yellowbutton round active" onclick="avSceneDiscover0()">1</a>
+    <a href="#" class="yellowbutton round" onclick="avSceneDiscover1()">2</a>
+    <a href="#" class="yellowbutton round" onclick="avSceneDiscover2()">3</a>
+    <a href="#" class="highlight" onclick="avSceneDiscover1()">WEITER</a>
+</div>
