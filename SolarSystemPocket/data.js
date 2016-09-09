@@ -105,7 +105,6 @@ Mine.prototype = {
 }
 
 function Empty() {
-    this.name = 'Empty';
     this.level = 1;
 }
 

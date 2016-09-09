@@ -7,8 +7,14 @@ SolarSystem.prototype = {
         this.param = {
             left: game.world.centerX - 337,
             rightinset: game.world.centerX + 120,
-            line1: game.world.height - 270,
-            slotShift: 110
+            line1: game.world.height - 295,
+            lineShift: 25,
+            lineTab: 50,
+            slotShift: 110,
+            slotRight: game.world.centerX + 248,
+            orbitFacX: 3.5,
+            orbitFacY: 2,
+            tabY: game.world.height - 231
         }
 
 
@@ -41,7 +47,8 @@ SolarSystem.prototype = {
         this.orbits = game.add.graphics(0, 0);
         this.orbits.lineStyle(1, 0x444444);
         for (var i = 0; i < this.activeSystem.planets.length; i++) {
-            this.orbits.drawEllipse(game.world.centerX, game.world.centerY, 3.5 * this.activeSystem.planets[i].distance, this.activeSystem.planets[i].distance * 2);
+            var distance = this.activeSystem.planets[i].distance;
+            this.orbits.drawEllipse(game.world.centerX, game.world.centerY, this.param.orbitFacX * distance, this.param.orbitFacY * distance);
         }
 
         //Data
@@ -72,17 +79,20 @@ SolarSystem.prototype = {
             var planetLabel = game.add.text(0, 0, this.activeSystem.planets[i].name, style, this.planetLabels);
             planetLabel.id = i;
             planetLabel.inputEnabled = true;
-            planetLabel.events.onInputDown.add(this.showPlanetDetail, this);
+            planetLabel.events.onInputDown.add(this.showOvl, this);
         }
     },
 
+    //RENDER FUNCTION
     render: function() {
         theta = game.time.totalElapsedSeconds() * 2;
 
         //Rotate Planets   
         for (var i = 0; i < this.planets.children.length; i++) {
-            this.planets.children[i].x = game.world.centerX + 1.75 * Math.cos(this.activeSystem.planets[i].speed * theta) * this.activeSystem.planets[i].distance * 2;
-            this.planets.children[i].y = game.world.centerY + Math.sin(this.activeSystem.planets[i].speed * theta) * this.activeSystem.planets[i].distance * 2;
+            var distance = this.activeSystem.planets[i].distance
+            var speed = this.activeSystem.planets[i].speed
+            this.planets.children[i].x = game.world.centerX + this.param.orbitFacX * Math.cos(speed * theta) * distance;
+            this.planets.children[i].y = game.world.centerY + this.param.orbitFacY * Math.sin(speed * theta) * distance;
             if (this.activeSystem.planets.length === this.planetLabels.children.length) {
                 this.planetLabels.children[i].x = this.planets.children[i].x + 10;
                 this.planetLabels.children[i].y = this.planets.children[i].y + 10;
@@ -90,48 +100,62 @@ SolarSystem.prototype = {
         }
     },
 
+
+    //UPDATE FUNCTIONS
     update: function() {
         //Resource Tab View  
         if (this.resourcesUpdateTexts != undefined) {
             for (var i = 0; i < this.resourcesUpdateTexts.children.length; i++) {
-                this.resourcesUpdateTexts.children[i].setText(parseInt(this.computeLoad(this.activePlanet.resources[i])) + "/" + this.computeCapacity(this.activePlanet.resources[i]));
+                var load = parseInt(this.computeLoad(this.activePlanet.resources[i])) + "/" + this.computeCapacity(this.activePlanet.resources[i]);
+                this.resourcesUpdateTexts.children[i].setText(load);
             }
         }
 
         //Build Menu Costs
-        if (this.buildMenuCostsTexts != undefined) {
+        if (this.buildMenuCostsTexts != undefined && this.buildMenuCostsOpt != undefined && this.buildMenuCostsOpt.children[0] != undefined) {
             for (var i = 0; i < this.buildMenuCostsTexts.children.length; i++) {
                 var resource = this.buildMenuCostsTexts.children[i].resource;
                 var cost = this.buildMenuCostsTexts.children[i].cost;
                 var load = this.computeLoad(resource);
                 this.buildMenuCostsTexts.children[i].setText(load + "/" + cost);
             }
+            if (this.isPayable(this.buildMenuCostsOpt.children[0].costs)) {
+                this.buildMenuCostsOpt.children[0].loadTexture('slot_accept');
+            }
         }
 
         //Mine Menu Costs
         if (this.mineMenuCostsTexts != undefined && this.mineMenuCostsOpt != undefined && this.mineMenuCostsOpt.children[0] != undefined) {
             for (var i = 0; i < this.mineMenuCostsTexts.children.length; i++) {
-                this.mineMenuCostsTexts.children[i].setText(parseInt(this.computeLoad(this.mineMenuCostsTexts.children[i].resource)) + "/" + this.mineMenuCostsTexts.children[i].price);
+                var resource = this.mineMenuCostsTexts.children[i].resource;
+                var cost = this.mineMenuCostsTexts.children[i].cost;
+                var load = this.computeLoad(resource);
+                this.mineMenuCostsTexts.children[i].setText(load + "/" + cost);
             }
             if (this.isPayable(this.mineMenuCostsOpt.children[0].costs)) {
                 this.mineMenuCostsOpt.children[0].loadTexture('slot_accept');
             }
         }
 
-        //Mine Detail
+        //MineDetail
         if (this.slotMenuDetailLevel != undefined && this.clickedSlot != undefined) {
-            this.slotMenuDetailLevel.setText("LOAD: \t" + parseInt(this.activePlanet.slots[this.clickedSlot].load) + "/" + this.activePlanet.slots[this.clickedSlot].capacity);
+            var load = parseInt(this.activePlanet.slots[this.clickedSlot].load);
+            var capacity = this.activePlanet.slots[this.clickedSlot].capacity;
+            this.slotMenuDetailLevel.setText("LOAD: \t" + load + "/" + capacity);
         }
     },
 
+    //Gets called once in a sec
     updateMines: function() {
         for (var i = 0; i < data.solarSystems.length; i++) {
             for (var j = 0; j < data.solarSystems[i].planets.length; j++) {
                 for (var k = 0; k < data.solarSystems[i].planets[j].slots.length; k++) {
                     if (data.solarSystems[i].planets[j].slots[k] instanceof Mine) {
-                        var possibleResult = data.solarSystems[i].planets[j].slots[k].load + 1 / Resource.parameters[data.solarSystems[i].planets[j].slots[k].resource].duration;
-                        if (possibleResult <= data.solarSystems[i].planets[j].slots[k].capacity) {
-                            data.solarSystems[i].planets[j].slots[k].load = possibleResult;
+                        var amount = 1 / Resource.parameters[data.solarSystems[i].planets[j].slots[k].resource].duration;
+                        var load = data.solarSystems[i].planets[j].slots[k].load;
+                        var capacity = data.solarSystems[i].planets[j].slots[k].capacity;
+                        if (load + amount <= capacity) {
+                            data.solarSystems[i].planets[j].slots[k].load = load + amount;
                         }
                     }
                 }
@@ -139,44 +163,49 @@ SolarSystem.prototype = {
         }
     },
 
-    showPlanetDetail: function(sprite) {
+    //Menu Starts Here
+    showOvl: function(sprite) {
+        //Disable Input for Planets
         for (var i = 0; i < this.planetLabels.children.length; i++) {
             this.planetLabels.children[i].inputEnabled = false;
         }
 
+        //Create Ovl Group
         this.activePlanet = this.activeSystem.planets[sprite.id];
-        this.planetDetail = game.add.group();
+        this.ovl = game.add.group();
 
         //Background
-        this.planetDetailBackground = this.planetDetail.create(game.world.centerX, game.world.height - 40, 'overlay');
-        this.planetDetailBackground.scale.set(1.25);
-        this.planetDetailBackground.anchor.set(0.5, 1);
+        this.ovlBackground = this.ovl.create(game.world.centerX, game.world.height - 40, 'overlay');
+        this.ovlBackground.scale.set(1.25);
+        this.ovlBackground.anchor.set(0.5, 1);
 
         //Headline
-        this.planetDetailHead = game.add.text(this.param.left, game.world.height - 350, "PLANET DATA (" + (this.activePlanet.discovered ? "discovered" : "undiscovered") + ")", fontStyles.medium_black, this.planetDetail);
+        var discovered = (this.activePlanet.discovered ? "discovered" : "undiscovered")
+        this.ovlHead = game.add.text(this.param.left, game.world.height - 350, "PLANET DATA (" + discovered + ")", fontStyles.medium_black, this.ovl);
 
-        this.planetDetailClose = game.add.text(game.world.centerX + 337, game.world.height - 350, "X", fontStyles.medium_black, this.planetDetail);
-        this.planetDetailClose.anchor.set(1, 0);
-        this.planetDetailClose.inputEnabled = true;
-        this.planetDetailClose.events.onInputDown.add(this.hidePlanetDetail, this);
+        this.ovlClose = game.add.text(game.world.centerX + 337, game.world.height - 350, "X", fontStyles.medium_black, this.ovl);
+        this.ovlClose.anchor.set(1, 0);
+        this.ovlClose.inputEnabled = true;
+        this.ovlClose.events.onInputDown.add(this.hideOvl, this);
 
         //Details
-        this.lines = game.add.group(this.planetDetail);
-        this.line1 = game.add.text(this.param.left, game.world.height - 300, "NAME: " + this.activePlanet.name, fontStyles.medium_black, this.lines);
-        this.line1.tabs = 50;
+        this.lines = game.add.group(this.ovl);
+        this.line1 = game.add.text(this.param.left, this.param.line1, "NAME: " + this.activePlanet.name, fontStyles.medium_black, this.lines);
+        this.line1.tabs = this.param.lineTab;
 
-        this.line2 = game.add.text(this.param.left, game.world.height - 275, "RADIUS: " + this.activePlanet.radius + "km", fontStyles.medium_black, this.lines);
-        this.line2.tabs = 50;
+        this.line2 = game.add.text(this.param.left, this.param.line1 + this.param.lineShift, "RADIUS: " + this.activePlanet.radius + "km", fontStyles.medium_black, this.lines);
+        this.line2.tabs = this.param.lineTab;
 
-        this.line3 = game.add.text(this.param.left, game.world.height - 250, "", fontStyles.medium_black, this.lines);
-        this.line3.tabs = 50;
+        this.line3 = game.add.text(this.param.left, this.param.line1  + 2 * this.param.lineShift, "", fontStyles.medium_black, this.lines);
+        this.line3.tabs = this.param.lineTab;
 
-        this.line4 = game.add.text(this.param.left, game.world.height - 225, "", fontStyles.medium_black, this.lines);
-        this.line4.tabs = 50;
+        this.line4 = game.add.text(this.param.left, this.param.line1 + 3 * this.param.lineShift, "", fontStyles.medium_black, this.lines);
+        this.line4.tabs = this.param.lineTab;
 
+        //Check if Planet is discovered yet
         if (this.activePlanet.discovered === true) {
             //Menu
-            this.menu = game.add.group(this.planetDetail);
+            this.menu = game.add.group(this.ovl);
 
             //Slots (Tab1 Content)
             this.showSlots();
@@ -188,12 +217,12 @@ SolarSystem.prototype = {
             this.tabBool = 1;
             this.switchMenuTabs();
         } else {
-            this.planetNoDetail = game.add.text(this.param.left, game.world.height - 150, "This planet is undiscovered!", fontStyles.medium_black, this.planetDetail);
+            this.line4.setText("This planet is undiscovered!");
         }
     },
 
-    hidePlanetDetail: function() {
-        this.planetDetail.removeAll(true);
+    hideOvl: function() {
+        this.ovl.removeAll(true);
         this.clickedSlot = undefined;
         for (var i = 0; i < this.planetLabels.children.length; i++) {
             this.planetLabels.children[i].inputEnabled = true;
@@ -201,25 +230,21 @@ SolarSystem.prototype = {
     },
 
     showSlots: function() {
+        var sprites = {
+            'Empty': 'slot_default',
+            'Port': 'slot_port'
+        };
+        var slotHeight = game.world.height - 155;
         if (this.slots != undefined) {
             this.slots.removeAll(true);
         }
         this.slots = game.add.group(this.menu);
 
         for (var i = 0; i < this.activePlanet.slots.length; i++) {
-            switch (this.activePlanet.slots[i].constructor.name) {
-                case 'Mine':
-                    var slot = this.makeResourceSlot(this.param.left + (i * this.param.slotShift), game.world.height - 155, this.activePlanet.slots[i].resource, this.slots);
-                    break;
-                case 'Empty':
-                    var slot = this.slots.create(this.param.left + (i * this.param.slotShift), game.world.height - 155, 'slot_default');
-                    break;
-                case 'Port':
-                    var slot = this.slots.create(this.param.left + (i * this.param.slotShift), game.world.height - 155, 'slot_port');
-                    break;
-                default:
-                    var slot = this.slots.create(this.param.left + (i * this.param.slotShift), game.world.height - 155, 'slot_default');
-                    break;
+            if (this.activePlanet.slots[i].constructor.name === 'Mine') {
+                var slot = this.makeResourceSlot(this.param.left + (i * this.param.slotShift), slotHeight, this.activePlanet.slots[i].resource, this.slots);
+            } else {
+                var slot = this.slots.create(this.param.left + (i * this.param.slotShift), slotHeight, sprites[this.activePlanet.slots[i].constructor.name]);
             }
             slot.id = i;
             slot.scale.set(0.9);
@@ -229,6 +254,8 @@ SolarSystem.prototype = {
     },
 
     showResources: function() {
+        var textHeight = game.world.height - 155;
+
         if (this.resources != undefined) {
             this.resources.removeAll(true);
         }
@@ -236,9 +263,9 @@ SolarSystem.prototype = {
         this.resourcesUpdateTexts = game.add.group(this.resources);
 
         for (var i = 0; i < this.activePlanet.resources.length; i++) {
-            var resource = game.add.text(this.param.left, game.world.height - 155 + (i * 25), this.activePlanet.resources[i], fontStyles.medium_black, this.resources);
+            var resource = game.add.text(this.param.left, textHeight + (i * 25), this.activePlanet.resources[i], fontStyles.medium_black, this.resources);
 
-            var value = game.add.text(game.world.centerX + 337, game.world.height - 155 + (i * 25), this.computeLoad(this.activePlanet.resources[i]) + "/" + this.computeCapacity(this.activePlanet.resources[i]), fontStyles.medium_black, this.resourcesUpdateTexts);
+            var value = game.add.text(game.world.centerX + 337, textHeight + (i * 25), "undef", fontStyles.medium_black, this.resourcesUpdateTexts);
             value.anchor.set(1, 0);
         }
     },
@@ -271,106 +298,138 @@ SolarSystem.prototype = {
     },
 
     switchMenuTabs: function() {
-        if (!this.tabBool) {
+        this.tabBool = !this.tabBool;
+
+        var texts = [
+            "SLOTS(" + this.activePlanet.slots.length + ")",
+            "RESOURCES(" + this.activePlanet.resources.length + ")"
+        ];
+        if (this.tabBool) {
             this.slots.removeAll(true);
             this.resources.visible = true;
 
-            this.menuTab1 = this.makeTab(this.param.left, game.world.height - 230, "SLOTS(" + this.activePlanet.slots.length + ")", 0xcdd478, fontStyles.medium_black, this.menu);
-            this.menuTab1.children[0].inputEnabled = true;
-            this.menuTab1.children[0].events.onInputDown.add(this.switchMenuTabs, this);
+            this.menuTab1 = this.makeTab(this.param.left, this.param.tabY, texts[0], 0xcdd478, fontStyles.medium_black, this.switchMenuTabs, this.menu);
+            this.menuTab2 = this.makeTab(game.world.centerX + 10, this.param.tabY, texts[1], 0x000000, fontStyles.medium_digital, this.switchMenuTabs, this.menu);
 
-            this.menuTab2 = this.makeTab(game.world.centerX + 10, game.world.height - 230, "RESOURCES(" + this.activePlanet.resources.length + ")", 0x000000, fontStyles.medium_digital, this.menu);
-            this.menuTab2.children[0].inputEnabled = true;
-            this.menuTab2.children[0].events.onInputDown.add(this.switchMenuTabs, this);
         } else {
             this.showSlots();
             this.resources.visible = false;
 
-            this.menuTab1 = this.makeTab(this.param.left, game.world.height - 230, "SLOTS(" + this.activePlanet.slots.length + ")", 0x000000, fontStyles.medium_digital, this.menu);
-            this.menuTab1.children[0].inputEnabled = true;
-            this.menuTab1.children[0].events.onInputDown.add(this.switchMenuTabs, this);
-
-            this.menuTab2 = this.makeTab(game.world.centerX + 10, game.world.height - 230, "RESOURCES(" + this.activePlanet.resources.length + ")", 0xcdd478, fontStyles.medium_black, this.menu);
-            this.menuTab2.children[0].inputEnabled = true;
-            this.menuTab2.children[0].events.onInputDown.add(this.switchMenuTabs, this);
+            this.menuTab1 = this.makeTab(this.param.left, this.param.tabY, texts[0], 0x000000, fontStyles.medium_digital, this.switchMenuTabs, this.menu);
+            this.menuTab2 = this.makeTab(game.world.centerX + 10, this.param.tabY, texts[1], 0xcdd478, fontStyles.medium_black, this.switchMenuTabs, this.menu);
         }
-        this.tabBool = !this.tabBool;
     },
 
-
-    //SLOT MENU
-
+    /**
+     * SLOT MENU starts here:
+     * This function gets calles when a Slot is clicked.
+     */
     openSlotMenu: function(sprite) {
-        if (this.clickedSlot === undefined) {
-            this.clickedSlot = sprite.id;
-        } else if (sprite != undefined) {
-            this.clickedSlot = sprite.id;
-        }
-        this.slotMenu = game.add.group(this.planetDetail);
-        this.planetDetailHead.setText("SLOT DATA (" + (this.activePlanet.slots[this.clickedSlot].name) + ")");
 
+        //Functions for different Slots
+        var slotMenuFunc = {
+            Empty: function(context) { context.openEmpty() },
+            Mine: function(context) { context.openMine() },
+            Port: function(context) { context.openPort() }
+        };
+
+        //Group Change
+        this.clearLines();
+        this.slotMenu = game.add.group(this.ovl);
         this.menu.visible = false;
 
-        switch (this.activePlanet.slots[this.clickedSlot].constructor.name) {
+        //Save clicked Slot
+        this.clickedSlot = (this.clickedSlot === undefined ? sprite.id : ((sprite != undefined && sprite.id != undefined) ? sprite.id : this.clickedSlot));
 
-            case 'Empty':
-                this.line1.setText("");
-                this.line2.setText("");
-                this.line3.setText("What do you want to do?");
+        //Set Head Text
+        this.ovlHead.setText("SLOT DATA (" + this.activePlanet.slots[this.clickedSlot].constructor.name + ")");
 
-                this.slotMenu.options = [{
-                    sprite: 'slot_mine',
-                    func: this.openMineMenu,
-                    text: 'Mine'
-                }, {
-                    sprite: 'slot_build',
-                    func: this.openBuildMenu,
-                    text: 'Build'
-                }, {
-                    sprite: 'slot_back',
-                    func: this.closeSlotMenu,
-                    text: 'Back'
-                }];
-                this.makeOptions(this.slotMenu.options, this.slotMenu);
-
-                break;
-            case 'Mine':
-                this.planetDetailHead.setText("SLOT DATA (" + this.activePlanet.slots[this.clickedSlot].constructor.name + ")");
-                this.line1.setText("TYPE: \t" + this.activePlanet.slots[this.clickedSlot].resource);
-                this.line2.setText("LEVEL:\t" + this.activePlanet.slots[this.clickedSlot].level);
-                var speed = "SPEED:\t" + new String(this.activePlanet.slots[this.clickedSlot].speed / Resource.parameters[this.activePlanet.slots[this.clickedSlot].resource].duration).substring(0, 3) + "/s";
-                this.line3.setText(speed);
-
-                this.slotMenuDetailLevel = game.add.text(this.param.left, game.world.height - 225, "LOAD:\t" + "/" + parseInt(this.activePlanet.slots[this.clickedSlot].capacity), fontStyles.medium_black, this.slotMenu);
-                this.slotMenuDetailLevel.tabs = 50;
-
-                this.slotMenu.options = [{
-                    sprite: 'slot_delete',
-                    func: this.deleteMine,
-                    text: 'Del.'
-                }, {
-                    sprite: 'slot_back',
-                    func: this.closeSlotMenu,
-                    text: 'Back'
-                }];
-                this.makeOptions(this.slotMenu.options, this.slotMenu);
-                break;
-        }
+        //Call special Function for different Slots
+        slotMenuFunc[this.activePlanet.slots[this.clickedSlot].constructor.name](this);
     },
 
     closeSlotMenu: function() {
         this.slotMenu.removeAll(true);
         this.menu.visible = true;
-        this.resetText();
+        this.resetLines();
     },
 
-    //MINE MENU
+    /**
+     * Different Slot Details start here:
+     * Group for the shown Details is context.slotMenu! 
+     */
+
+    //Empty Detail (BUILD OR MINE?)
+    openEmpty() {
+        this.line3.setText("What do you want to do?");
+
+        //Options
+        this.slotMenu.options = [{
+            sprite: 'slot_mine',
+            func: this.openMineMenu,
+            text: 'Mine'
+        }, {
+            sprite: 'slot_build',
+            func: this.openBuildMenu,
+            text: 'Build'
+        }, {
+            sprite: 'slot_back',
+            func: this.closeSlotMenu,
+            text: 'Back'
+        }];
+        this.makeOptions(this.slotMenu.options, this.slotMenu);
+    },
+
+    //Mine Detail
+    openMine() {
+        //Texts
+        var speed = new String(this.activePlanet.slots[this.clickedSlot].speed / Resource.parameters[this.activePlanet.slots[this.clickedSlot].resource].duration);
+        var texts = [
+            "TYPE: \t" + this.activePlanet.slots[this.clickedSlot].resource,
+            "LEVEL:\t" + this.activePlanet.slots[this.clickedSlot].level,
+            "SPEED:\t" + speed.substring(0, 3) + "/s"
+        ]
+        this.setLines(texts);
+        this.slotMenuDetailLevel = game.add.text(this.param.left, game.world.height - 225, "undef", fontStyles.medium_black, this.slotMenu);
+        this.slotMenuDetailLevel.tabs = 50;
+
+        //Preview
+        this.slotMenuPreview = this.makeResourceSlot(this.param.slotRight, this.param.line1, this.activePlanet.slots[this.clickedSlot].resource, this.slotMenu);
+        this.slotMenuPreview.scale.set(0.9);
+
+        //Options
+        this.slotMenu.options = [{
+            sprite: 'slot_delete',
+            func: this.deleteMine,
+            text: 'Del.'
+        }, {
+            sprite: 'slot_back',
+            func: this.closeSlotMenu,
+            text: 'Back'
+        }];
+        this.makeOptions(this.slotMenu.options, this.slotMenu);
+    },
+
+    openPort() {
+        //Options
+        this.slotMenu.options = [{
+            sprite: 'slot_back',
+            func: this.closeSlotMenu,
+            text: 'Back'
+        }];
+        this.makeOptions(this.slotMenu.options, this.slotMenu);
+    },
+
+    /**
+     * MINE and BUILD MENU!
+     * Stuff that is shown, when Slot ist Empty
+     */
 
     openMineMenu: function() {
         if (this.slotMenu.children != undefined) {
             this.slotMenu.removeAll(true);
         }
-        this.mineMenu = game.add.group(this.planetDetail);
+        this.mineMenu = game.add.group(this.ovl);
         this.mineMenu.destroyChildren = true;
         this.line3.setText("What do you want to mine?");
 
@@ -391,6 +450,7 @@ SolarSystem.prototype = {
     },
 
     closeMineMenu: function() {
+        this.clearLines();
         this.mineMenu.removeAll(true);
         this.openSlotMenu();
     },
@@ -399,6 +459,9 @@ SolarSystem.prototype = {
 
         //Generate Variables
         var level = this.activePlanet.slots[this.clickedSlot].level;
+        var resource = sprite.resource;
+        var resourceShort = Resource.parameters[resource].shortform;
+        var rString = new String(resource).toUpperCase();
 
         var costString = resourceShort + "_" + level;
         var costs = Prices[costString];
@@ -406,23 +469,18 @@ SolarSystem.prototype = {
             costs = Prices['def'];
         }
 
-        var resource = sprite.resource;
-        var resourceShort = Resource.parameters[resource].shortform;
-        var rString = new String(resource).toUpperCase();
-
         //Group Change
         this.mineMenu.removeAll(true);
-        this.mineMenuCosts = game.add.group(this.planetDetail);
+        this.mineMenuCosts = game.add.group(this.ovl);
 
         //Slot Preview
-        this.buildSlot = this.makeResourceSlot(game.world.centerX + 248, this.param.line1, resource, this.mineMenuCosts);
+        this.buildSlot = this.makeResourceSlot(this.param.slotRight, this.param.line1, resource, this.mineMenuCosts);
 
-        this.line1.setText('\tCOSTS');
-        this.line3.setText('');
+        this.clearLines();
 
         //Options
-          this.mineMenuCosts.options = [{
-            sprite: 'slot_accept',
+        this.mineMenuCosts.options = [{
+            sprite: 'slot_accept_dis',
             func: this.buildMine,
             text: 'Build'
         }, {
@@ -431,50 +489,20 @@ SolarSystem.prototype = {
             text: 'Back'
         }];
 
-        if (!this.isPayable(costs)) {
-            this.mineMenuCosts.options[0].sprite = 'slot_accept_dis'
-        }
-
         this.mineMenuCostsOpt = this.makeOptions(this.mineMenuCosts.options, this.mineMenuCosts);
         //Pass needed variables to Build Button
         this.mineMenuCostsOpt.children[0].costs = costs;
         this.mineMenuCostsOpt.children[0].resource = resource;
 
 
-         //Costs
-        this.mineMenuCostsTexts = game.add.group(this.buildMenuCosts);
-        this.line1.setText("BUILD " + sprite.type.toUpperCase() + " (LVL " + level + ")");
-        for (var i = 1; i < this.lines.children.length; i++) {
-            if (costs[2 * (i - 1)] != undefined) {
-
-                this.lines.children[i].setText(new String(costs[2 * (i - 1)]));
-
-                var text = game.add.text(this.param.rightinset, this.param.line1 + (i - 1) * 25, "0/0", fontStyles.medium_black, this.mineMenuCostsTexts);
-                text.anchor.set(1, 0);
-                text.resource = costs[2 * (i - 1)];
-                text.cost = costs[2 * i - 1];
-            }
-        }
-/*
-
+        //Text (Costs)
         this.mineMenuCostsTexts = game.add.group(this.mineMenuCosts);
         this.line1.setText("BUILD " + rString + " MINE (LVL " + level + ")");
-
-        for (var i = 0; i < costs.length; i += 2) {
-            var priceName = costs[i];
-            var price = costs[i + 1];
-            var name = game.add.text(game.world.centerX - 300, this.param.line1 + (i * 12.5), priceName + ":", fontStyles.medium_black, this.mineMenuCosts);
-            var cost = game.add.text(this.param.rightinset, this.param.line1 + (i * 12.5), parseInt(this.computeLoad(priceName)) + "/" + price, fontStyles.medium_black, this.mineMenuCostsTexts);
-            cost.price = price;
-            cost.resource = priceName;
-            cost.anchor.set(1, 0);
-        }*/
-
-      
+        this.displayCosts(costs, this.mineMenuCostsTexts);
     },
 
     closeMineMenuCosts: function() {
-        this.line1.setText("");
+        this.clearLines();
         this.mineMenuCosts.removeAll(true);
         this.openMineMenu();
     },
@@ -492,7 +520,7 @@ SolarSystem.prototype = {
                 this.activePlanet.slots[this.clickedSlot] = new Mine(sprite.resource);
                 this.mineMenuCosts.removeAll(true);
                 this.menu.visible = true;
-                this.resetText();
+                this.resetLines();
                 this.showSlots();
             }
         }
@@ -503,19 +531,18 @@ SolarSystem.prototype = {
         this.slotMenu.removeAll(true);
         this.showSlots();
         this.menu.visible = true;
-        this.resetText();
+        this.resetLines();
     },
 
     //BUILD MENU
     openBuildMenu: function() {
-        this.line1.setText("");
-        this.line2.setText("");
-        this.line4.setText("");
+        this.clearLines();
         this.line3.setText("What do you want to build?");
+
         if (this.slotMenu.children != undefined) {
             this.slotMenu.removeAll(true);
         }
-        this.buildMenu = game.add.group(this.planetDetail);
+        this.buildMenu = game.add.group(this.ovl);
         this.buildMenu.options = [{
             sprite: 'slot_port',
             func: this.openBuildMenuCosts,
@@ -541,15 +568,15 @@ SolarSystem.prototype = {
 
         //Group Change
         this.buildMenu.removeAll(true);
-        this.buildMenuCosts = game.add.group(this.planetDetail);
+        this.buildMenuCosts = game.add.group(this.ovl);
 
         //Slot Preview
-        this.buildMenuCostsPreview = this.buildMenuCosts.create(game.world.centerX + 248, this.param.line1, sprite.key);
+        this.buildMenuCostsPreview = this.buildMenuCosts.create(this.param.slotRight, this.param.line1, sprite.key);
         this.buildMenuCostsPreview.scale.set(0.9);
 
         //Options
         this.buildMenuCosts.options = [{
-            sprite: 'slot_accept',
+            sprite: 'slot_accept_dis',
             func: this.build,
             text: 'Build'
         }, {
@@ -564,17 +591,8 @@ SolarSystem.prototype = {
         //Costs
         this.buildMenuCostsTexts = game.add.group(this.buildMenuCosts);
         this.line1.setText("BUILD " + sprite.type.toUpperCase() + " (LVL " + level + ")");
-        for (var i = 1; i < this.lines.children.length; i++) {
-            if (costs[2 * (i - 1)] != undefined) {
+        this.displayCosts(costs, this.buildMenuCostsTexts);
 
-                this.lines.children[i].setText(new String(costs[2 * (i - 1)]));
-
-                var text = game.add.text(this.param.rightinset, this.param.line1 + (i - 1) * 25, "0/0", fontStyles.medium_black, this.buildMenuCostsTexts);
-                text.anchor.set(1, 0);
-                text.resource = costs[2 * (i - 1)];
-                text.cost = costs[2 * i - 1];
-            }
-        }
     },
 
     closeBuildMenuCosts: function() {
@@ -587,17 +605,19 @@ SolarSystem.prototype = {
 
             this.payCosts(sprite.costs);
 
-            switch (sprite.type) {
-                case 'Port':
-                    this.activePlanet.slots[this.clickedSlot] = new Port();
-                    this.activePlanet.slots.push(new Empty());
-                    break;
-            }
+            var build = {
+                Port: function(context) {
+                    context.activePlanet.slots[context.clickedSlot] = new Port();
+                    context.activePlanet.slots.push(new Empty());
+                }
+            };
+
+            build[sprite.type](this);
 
             this.buildMenuCosts.removeAll(true);
             this.menu.visible = true;
             this.showSlots();
-            this.resetText();
+            this.resetLines();
 
         }
     },
@@ -629,11 +649,38 @@ SolarSystem.prototype = {
     },
 
 
-    resetText: function() {
-        this.planetDetailHead.setText("PLANET DATA (" + (this.activePlanet.discovered ? "discovered" : "undiscovered") + ")");
+    resetLines: function() {
+        this.ovlHead.setText("PLANET DATA (" + (this.activePlanet.discovered ? "discovered" : "undiscovered") + ")");
         this.line1.setText("NAME: " + this.activePlanet.name);
         this.line2.setText("RADIUS: " + this.activePlanet.radius + "km");
         this.line3.setText(" ");
+    },
+
+    clearLines: function() {
+        for (var i = 0; i < this.lines.children.length; i++) {
+            this.lines.children[i].setText("")
+        }
+    },
+
+    setLines: function(texts) {
+        for (var i = 0; i < this.lines.children.length; i++) {
+            if (texts[i] === undefined) {
+                texts.push(" ");
+            }
+            this.lines.children[i].setText(texts[i])
+        }
+    },
+
+    displayCosts: function(costs, group) {
+        for (var i = 1; i < this.lines.children.length; i++) {
+            if (costs[2 * (i - 1)] != undefined) {
+                this.lines.children[i].setText(new String(costs[2 * (i - 1)]));
+                var text = game.add.text(this.param.rightinset, this.param.line1 + 25 + (i - 1) * 25, "0/0", fontStyles.medium_black, group);
+                text.anchor.set(1, 0);
+                text.resource = costs[2 * (i - 1)];
+                text.cost = costs[2 * i - 1];
+            }
+        }
     },
 
     isPayable: function(costs) {
@@ -692,13 +739,15 @@ SolarSystem.prototype = {
         return optGroup;
     },
 
-    makeTab: function(x, y, text, color, fontStyle, group) {
+    makeTab: function(x, y, text, color, fontStyle, func, group) {
         var tab = game.add.group(group);
 
         var tabBg = game.add.graphics(0, 0, tab);
         tabBg.beginFill(color);
         tabBg.drawRect(x, y, 325, 50);
         tabBg.endFill();
+        tabBg.inputEnabled = true;
+        tabBg.events.onInputDown.add(func, this);
 
         var tabText = game.add.text(x + 162, y + 27, text, fontStyle, tab);
         tabText.anchor.set(0.5);
