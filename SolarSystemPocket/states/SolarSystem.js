@@ -5,6 +5,7 @@ SolarSystem.prototype = {
 
     init: function() {
         this.param = {
+            systemCenterY: game.world.centerY, 
             left: game.world.centerX - 337,
             rightinset: game.world.centerX + 120,
             line1: game.world.height - 295,
@@ -12,8 +13,8 @@ SolarSystem.prototype = {
             lineTab: 50,
             slotShift: 110,
             slotRight: game.world.centerX + 248,
-            orbitFacX: 3.5,
-            orbitFacY: 2,
+            orbitFacX: 4,
+            orbitFacY: 2.5,
             tabY: game.world.height - 231
         }
 
@@ -39,7 +40,7 @@ SolarSystem.prototype = {
         game.time.events.loop(Phaser.Timer.SECOND, this.updateMines, this);
 
         //Background
-        this.bg = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
+        this.bg = game.add.sprite(game.world.centerX, this.param.systemCenterY , 'background');
         this.bg.anchor.set(0.5);
         this.bg.scale.set(1);
 
@@ -48,7 +49,7 @@ SolarSystem.prototype = {
         this.orbits.lineStyle(1, 0x444444);
         for (var i = 0; i < this.activeSystem.planets.length; i++) {
             var distance = this.activeSystem.planets[i].distance;
-            this.orbits.drawEllipse(game.world.centerX, game.world.centerY, this.param.orbitFacX * distance, this.param.orbitFacY * distance);
+            this.orbits.drawEllipse(game.world.centerX, this.param.systemCenterY, this.param.orbitFacX * distance, this.param.orbitFacY * distance);
         }
 
         //Data
@@ -60,7 +61,7 @@ SolarSystem.prototype = {
         game.add.existing(this.playerUc);
 
         //Sun
-        this.sun = game.add.sprite(game.world.centerX, game.world.centerY, 'sun');
+        this.sun = game.add.sprite(game.world.centerX, this.param.systemCenterY , 'sun');
         this.sun.anchor.set(0.5);
         this.sun.scale.set(1);
 
@@ -85,14 +86,14 @@ SolarSystem.prototype = {
 
     //RENDER FUNCTION
     render: function() {
-        theta = game.time.totalElapsedSeconds() * 2;
+        var theta = 200 + (game.time.totalElapsedSeconds() / 6);
 
         //Rotate Planets   
         for (var i = 0; i < this.planets.children.length; i++) {
             var distance = this.activeSystem.planets[i].distance
             var speed = this.activeSystem.planets[i].speed
             this.planets.children[i].x = game.world.centerX + this.param.orbitFacX * Math.cos(speed * theta) * distance;
-            this.planets.children[i].y = game.world.centerY + this.param.orbitFacY * Math.sin(speed * theta) * distance;
+            this.planets.children[i].y = this.param.systemCenterY  + this.param.orbitFacY * Math.sin(speed * theta) * distance;
             if (this.activeSystem.planets.length === this.planetLabels.children.length) {
                 this.planetLabels.children[i].x = this.planets.children[i].x + 10;
                 this.planetLabels.children[i].y = this.planets.children[i].y + 10;
@@ -308,7 +309,7 @@ SolarSystem.prototype = {
             this.slots.removeAll(true);
             this.resources.visible = true;
 
-            this.menuTab1 = this.makeTab(this.param.left, this.param.tabY, texts[0], 0xcdd478, fontStyles.medium_black, this.switchMenuTabs, this.menu);
+            this.menuTab1 = this.makeTab(this.param.left, this.param.tabY, texts[0], 0x7e8b99, fontStyles.medium_black, this.switchMenuTabs, this.menu);
             this.menuTab2 = this.makeTab(game.world.centerX + 10, this.param.tabY, texts[1], 0x000000, fontStyles.medium_digital, this.switchMenuTabs, this.menu);
 
         } else {
@@ -316,7 +317,7 @@ SolarSystem.prototype = {
             this.resources.visible = false;
 
             this.menuTab1 = this.makeTab(this.param.left, this.param.tabY, texts[0], 0x000000, fontStyles.medium_digital, this.switchMenuTabs, this.menu);
-            this.menuTab2 = this.makeTab(game.world.centerX + 10, this.param.tabY, texts[1], 0xcdd478, fontStyles.medium_black, this.switchMenuTabs, this.menu);
+            this.menuTab2 = this.makeTab(game.world.centerX + 10, this.param.tabY, texts[1], 0x7e8b99, fontStyles.medium_black, this.switchMenuTabs, this.menu);
         }
     },
 
