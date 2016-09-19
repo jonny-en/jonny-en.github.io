@@ -75,7 +75,8 @@ Game.prototype = {
     },
 
 
-    init: function() {},
+    init: function() {
+    },
 
     preload: function() {
         this.loadScripts();

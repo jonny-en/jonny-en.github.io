@@ -6,9 +6,9 @@ var Resource = {
     OXYGEN: 'Oxygen',
     parameters: {
         Coin: { shortform: 'Coin', duration: '200' },
-        Iron: { shortform: 'Fe', duration: 1 },
+        Iron: { shortform: 'Fe', duration: 2 },
         Carbon: { shortform: 'C', duration: 1 },
-        Oxygen: { shortform: 'O', duration: 1 }
+        Oxygen: { shortform: 'O', duration: 3 }
     }
 };
 
@@ -53,10 +53,10 @@ function SolarSystem() {
 SolarSystem.prototype = {
     constructor: SolarSystem,
     generatePlanets: function() {
-        var dist = game.rnd.integerInRange(50, 50);
+        var dist = game.rnd.integerInRange(30, 50);
         while (dist <= 100) {
             this.planets.push(new Planet(dist));
-            dist += game.rnd.integerInRange(10, 20);
+            dist += game.rnd.integerInRange(7.5, 20);
         }
     }
 }
@@ -66,7 +66,7 @@ function Sun() {
     this.radius = game.rnd.integerInRange(800000, 1390000);
 }
 
-Sun.protoype = {
+Sun.prototype = {
     constructor: Sun
 }
 
@@ -87,9 +87,16 @@ function Planet(dist) {
     this.fauna = (this.flora ? game.rnd.integerInRange(0, 1) : false);
 }
 
-
-Planet.protoype = {
-    constructor: Planet
+Planet.prototype = {
+    constructor: Planet,
+    hasPort: function() {
+        for (var slot of this.slots) {
+            if (slot instanceof Port) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 function Mine(resource) {
@@ -113,13 +120,13 @@ Empty.prototype = {
 }
 
 function Port(type) {
-        this.level = 1
-        this.capacity = 100;
-        this.inventory = [];
+    this.level = 1
+    this.capacity = 100;
+    this.inventory = [];
 }
 
 Port.prototype = {
-    constructor : Port
+    constructor: Port
 }
 
 //Functions To Generate Data
