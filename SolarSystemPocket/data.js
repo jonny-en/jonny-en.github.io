@@ -18,7 +18,7 @@ var Prices = {
     Fe_1: [Resource.COIN, 400, Resource.CARBON, 20],
     C_1: [Resource.COIN, 200],
     O_1: [Resource.COIN, 800, Resource.IRON, 10, Resource.CARBON, 40],
-    Port_1: [Resource.COIN, 1000, Resource.CARBON, 5]
+    Port_1: [Resource.COIN, 1000, Resource.CARBON, 1]
 };
 
 //Objects 
@@ -121,7 +121,7 @@ Empty.prototype = {
 
 function Port(type) {
     this.level = 1
-    this.capacity = 100;
+    this.capacity = 50;
     this.inventory = [];
 }
 

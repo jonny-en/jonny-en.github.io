@@ -13,11 +13,11 @@ var Game = function() {},
             fill: "#dae27e"
         },
         medium_black: {
-            font: "20px PressStart",
+            font: "18px PressStart",
             fill: "#000000",
         },
         medium_digital: {
-            font: "20px PressStart",
+            font: "18px PressStart",
             fill: "#dae27e"
         },
         big_black: {
