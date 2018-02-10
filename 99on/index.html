@@ -1,0 +1,126 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+
+
+        <link rel="manifest" href="site.webmanifest">
+        <link rel="apple-touch-icon" href="icon.png">
+        <!-- Place favicon.ico in the root directory -->
+
+        <link rel="stylesheet" href="css/format.css">
+        <link rel="stylesheet" href="vendor/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+    </head>
+    <body  onload="setTimeout(function() { window.scrollTo(0, 1) }, 100);">
+        <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+        <!-- application content  -->
+        <div class="fluid-container darts-app">
+    		<div class="row header">
+        		<div  class="col-3 "></div>
+                <div class="col-6 logo">99on</div>
+        		<div  class="col-3"><span id="view-stats" class="align-middle">VIEW STATS</span></div>
+    		</div>
+    		<div class="row stats">
+                <div id="fields" class="col-4">
+                    <div class="fields-container">
+                    <div class="row field-row">
+                        <div class="col-6 field-description">
+                            <span>SINGLE:</span><br>
+                        </div>
+                        <div class="col-6 field-number">
+                            <span id="single-stats">0</span><br>
+                        </div>
+                    </div>
+                     <div class="row field-row">
+                        <div class="col-6 field-description">
+                            <span>DOUBLE:</span><br>
+                        </div>
+                        <div class="col-6 field-number">
+                            <span id="double-stats">0</span><br>
+                        </div>
+                    </div>
+                     <div class="row field-row">
+                        <div class="col-6 field-description">
+                            <span>TRIPLE:</span><br>
+                        </div>
+                        <div class="col-6 field-number">
+                            <span id="triple-stats">0</span><br>
+                        </div>
+                    </div>
+                    <div class="row field-row">
+                        <div class="col-6 field-description">
+                            <span>HITS (%):</span><br>
+                        </div>
+                        <div class="col-6 field-number">
+                            <span id="hits-stats">0</span><br>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div id="points" class="col-4">
+                    <span id="pointsspan">0</span><br>POINTS
+                </div>
+                <div id="round" class="col-4">
+                     <div id="darts" class="row">
+                        <div class="col-12">
+                            <span id="dart_1">➵</span>
+                            <span id="dart_2">➵</span>
+                            <span id="dart_3">➵</span>
+                        </div>
+                    </div>
+                        <div class="row">
+                            <div id="thrown" class="col-12">
+                                THROWN DARTS: 0
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="row buttons">
+                <div id="miss" class="col-2">MISS</div>
+                <div id="single" class="col-2">SINGLE</div>
+                <div id="double"class="col-2">DOUBLE</div>
+                <div id="triple"class="col-2">TRIPLE</div>
+                <div class="undo-next col-4">
+                    <div id="undo">◄ UNDO</div>
+                    <div id="next">NEXT ►</div>
+                </div>
+            </div>
+         <div id="stats-view">
+            <div class="row">
+                <div class="col-9"></div>
+                <div class="col-3">
+                    <span id="hide-stats">HIDE STATS</span>
+                </div>
+            </div>
+           
+            <div class="row">
+                <div class="col-3"><span>NUMBER</span></div>
+                <div class="col-3"><span>PERCENTAGE</span></div>
+                <div class="col-3"><span>POINTS</span></div>
+            </div>
+            <div id="ls-stats">
+           </div>
+            <div class="row">
+                <div class="col-9"></div>
+                <div class="col-3">
+                </div>
+            </div>
+
+        </div>
+        </div>
+       
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+        <script src="js/main.js"></script>
+        <script src="vendor/bootstrap.min.js"></script>
+
+
+    </body>
+</html>

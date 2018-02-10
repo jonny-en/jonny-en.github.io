@@ -1,0 +1,164 @@
+
+.color-primary-0 { color: #AA5B39 }	/* Main Primary color */
+.color-primary-1 { color: #FFC3AA }
+.color-primary-2 { color: #D48A6A }
+.color-primary-3 { color: #803516 }
+.color-primary-4 { color: #551A00 }
+
+.color-secondary-1-0 { color: #579532 }	/* Main Secondary color (1) */
+.color-secondary-1-1 { color: #B0DF95 }
+.color-secondary-1-2 { color: #7FBA5D }
+.color-secondary-1-3 { color: #367013 }
+.color-secondary-1-4 { color: #1C4B00 }
+
+.color-secondary-2-0 { color: #29526D }	/* Main Secondary color (2) */
+.color-secondary-2-1 { color: #708FA3 }
+.color-secondary-2-2 { color: #486F88 }
+.color-secondary-2-3 { color: #123952 }
+.color-secondary-2-4 { color: #032237 }
+
+html, body {
+    position: fixed;
+}
+
+html, body {
+    position: relative;
+    overflow: hidden;
+}
+
+body {
+    position: fixed;
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+.darts-app{
+	background-color: black !important;
+    margin: 0%;   
+    height: 100vh;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 100%;
+    overflow-x: hidden;
+    font-family: 'Oxygen', sans-serif !important;
+}
+
+@media (min-width: 1024px) { 
+.darts-app{
+	font-size: 200%;
+ }
+}
+
+
+.logo{
+	font-family: 'Pacifico', cursive;
+	font-size: 10vh;
+	text-align: center;
+}
+
+.header{
+	height: 15%;
+	background-color: #032237;
+	line-height: 15vh;
+}
+.stats{
+	background-color: #123952;
+	height: 40%;
+}
+.buttons{
+	height: 45%;
+	line-height: 45vh;
+}
+
+
+#fields{
+	font-size: 75% !important;
+	padding-bottom: 1%;
+	padding-top: 1%;
+}
+
+@media (min-width: 1024px) { 
+#fields{
+	font-size: 100% !important;
+ }
+}
+
+.fields-container{
+	padding-top: 4%;
+	margin-top: 1%;
+	width: 90%;
+	margin-left:5%;
+	border: 1px dotted white;
+	height: 100%;
+}
+.field-row{
+	height: 25%;
+}
+
+.field-number{
+	text-align: left;
+	padding-left:0px !important;
+}
+.field-description{
+	text-align: right;
+}
+#points{
+	line-height:6vh;
+	padding-top: 15vh;
+}
+#pointsspan{
+	font-size: 300%;
+}
+#darts{
+	height: 65%;
+}
+#darts span{
+	font-size: 300%;
+	margin-right: 3%;
+	margin-left: 3%;
+}
+#round{
+	line-height: 7vh;
+	padding-top: 5%;
+	}
+#thrown{
+	height: 30%;
+}
+#single{
+	background-color: #29526D;
+}
+#double{
+	background-color: #486F88;
+}
+#triple{
+	background-color: #708FA3;
+}
+.undo-next{
+	background-color: #032237;
+	padding: 0 !important;
+}
+
+#undo{
+	line-height: 15vh;
+	height: 30%;
+	width: 100%;
+	background-color:  #AA5B39;
+}
+#next{
+	line-height: 35vh;
+	height: 70%;
+}
+
+#stats-view{
+	position: absolute;
+	z-index: 100;
+	padding-top: 2%;
+	top: 5%;
+	left: 5%;
+	height: 90%;
+	width: 90%;
+	text-align: center;
+	background-color: rgba(0,0,0,0.9);
+	display: none;
+}
