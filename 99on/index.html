@@ -21,46 +21,46 @@
         <![endif]-->
         <!-- application content  -->
         <div class="fluid-container darts-app">
-    		<div class="row header">
-        		<div  class="col-3 ">made with ♥</div>
+    	   <div class="row header">
+        		<div class="col-3 ">made with ♥</div>
                 <div class="col-6 logo">99on</div>
-        		<div  class="col-3"><span id="view-stats" class="align-middle">VIEW STATS</span></div>
+        		<div class="col-3"><span id="view-stats" class="align-middle">VIEW STATS</span></div>
     		</div>
     		<div class="row stats">
                 <div id="fields" class="col-4">
                     <div class="fields-container">
-                    <div class="row field-row">
-                        <div class="col-6 field-description">
-                            <span>SINGLE:</span><br>
+                        <div class="row field-row">
+                            <div class="col-6 field-description">
+                                <span>SINGLE:</span><br>
+                            </div>
+                            <div class="col-6 field-number">
+                                <span id="single-stats">0</span><br>
+                            </div>
                         </div>
-                        <div class="col-6 field-number">
-                            <span id="single-stats">0</span><br>
+                        <div class="row field-row">
+                            <div class="col-6 field-description">
+                                <span>DOUBLE:</span><br>
+                            </div>
+                            <div class="col-6 field-number">
+                                <span id="double-stats">0</span><br>
+                            </div>
                         </div>
-                    </div>
-                     <div class="row field-row">
-                        <div class="col-6 field-description">
-                            <span>DOUBLE:</span><br>
+                        <div class="row field-row">
+                            <div class="col-6 field-description">
+                                <span>TRIPLE:</span><br>
+                            </div>
+                            <div class="col-6 field-number">
+                                <span id="triple-stats">0</span><br>
+                            </div>
                         </div>
-                        <div class="col-6 field-number">
-                            <span id="double-stats">0</span><br>
+                        <div class="row field-row">
+                            <div class="col-6 field-description">
+                                <span>HITS (%):</span><br>
+                            </div>
+                            <div class="col-6 field-number">
+                                <span id="hits-stats">0</span><br>
+                            </div>
                         </div>
-                    </div>
-                     <div class="row field-row">
-                        <div class="col-6 field-description">
-                            <span>TRIPLE:</span><br>
-                        </div>
-                        <div class="col-6 field-number">
-                            <span id="triple-stats">0</span><br>
-                        </div>
-                    </div>
-                    <div class="row field-row">
-                        <div class="col-6 field-description">
-                            <span>HITS (%):</span><br>
-                        </div>
-                        <div class="col-6 field-number">
-                            <span id="hits-stats">0</span><br>
-                        </div>
-                    </div>
                     </div>
                 </div>
                 <div id="points" class="col-4">
@@ -91,35 +91,30 @@
                     <div id="next">NEXT ►</div>
                 </div>
             </div>
-         <div id="stats-view">
-            <div class="row">
-                <div class="col-9"></div>
-                <div class="col-3">
-                    <span id="hide-stats">HIDE STATS</span>
+            <div id="stats-view">
+                <div class="row">
+                    <div class="col-9"></div>
+                    <div class="col-3">
+                        <span id="hide-stats">HIDE STATS</span>
+                    </div>
                 </div>
-            </div>
            
-            <div class="row">
-                <div class="col-3"><span>NUMBER</span></div>
-                <div class="col-3"><span>PERCENTAGE</span></div>
-                <div class="col-3"><span>POINTS</span></div>
-            </div>
-            <div id="ls-stats">
-           </div>
-            <div class="row">
-                <div class="col-9"></div>
-                <div class="col-3">
+                <div class="row">
+                    <div class="col-3"><span>NUMBER</span></div>
+                    <div class="col-3"><span>PERCENTAGE</span></div>
+                    <div class="col-3"><span>POINTS</span></div>
+                </div>
+                <div id="ls-stats"></div>
+                <div class="row">
+                    <div class="col-9"></div>
+                    <div class="col-3"></div>
                 </div>
             </div>
-
-        </div>
         </div>
        
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
         <script src="js/main.js"></script>
         <script src="vendor/bootstrap.min.js"></script>
-
-
     </body>
 </html>
