@@ -25,7 +25,7 @@ var darts_round = 3;
 				});
 			});
 			var percentage = Math.round(1000*hits/99)/10;
-			$( "#ls-stats" ).append("<div class='row'><div class='col-3'><span>" + (i+1) + "</span></div><div class='col-3'><span>" + percentage +"</span></div><div class='col-3'><span>"+ total +"</span></div></div>");
+			$( "#ls-stats" ).append("<div class='row'><div class='col-4'><span>" + (i+1) + "</span></div><div class='col-4'><span>" + percentage +"</span></div><div class='col-4'><span>"+ total +"</span></div></div>");
 		});
 	}
 	$( "#stats-view" ).fadeIn( "fast", function() {});
