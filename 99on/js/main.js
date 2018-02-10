@@ -149,7 +149,7 @@ function updateGUI(){
 	$("#triple-stats").text(temp_t);
 	if(darts_round < 3 || stored_rounds.length > 0){
 	var percentage = Math.round(1000*hits/thrown)/10;
-	$("#hits-stats").text(hits + "/" + thrown + " (" + percentage + "%)");
+	$("#hits-stats").text(hits + " (" + percentage + "%)");
 	}
 	else{
 	$("#hits-stats").text("0/0");
