@@ -116,7 +116,6 @@ body {
 	background-color: #708FA3;
 }
 .undo-next{
-	background-color: #032237;
 	padding: 0 !important;
 }
 
@@ -127,6 +126,7 @@ body {
 	background-color:  #AA5B39;
 }
 #next{
+	background-color: #032237;
 	line-height: 35vh;
 	height: 70%;
 }
