@@ -1,10 +1,11 @@
 'use strict';
 
+
+$(document).ready(function(){
 var active_round = [-1,-1,-1];
 var stored_rounds = []; 
 var darts_round = 3;
-
-$( "#view-stats" ).click(function() {
+	$( "#view-stats" ).click(function() {
 
 	var stats = []
 	stats = JSON.parse(localStorage.getItem("sessions"));
@@ -171,6 +172,8 @@ function updateGUI(){
 	else{
 		$("#dart_3").text(active_round[2]);
 	}
+}
+
 }
 
 
