@@ -1,5 +1,4 @@
 'use strict';
-screen.orientation.lock('portrait');
 
 var active_round = [-1,-1,-1];
 var stored_rounds = []; 
