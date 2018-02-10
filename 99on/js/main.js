@@ -152,7 +152,7 @@ function updateGUI(){
 	$("#hits-stats").text(hits + "/" + thrown + " (" + percentage + "%)");
 	}
 	else{
-	$("#hits-stats").text("HITS: 0/0");
+	$("#hits-stats").text("0/0");
 	}
 	if(active_round[0] == -1){
 		$("#dart_1").text("➵");
