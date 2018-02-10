@@ -24,7 +24,7 @@ $( "#view-stats" ).click(function() {
 					}
 				});
 			});
-			var percentage = Math.round(100*hits/99)/100;
+			var percentage = Math.round(1000*hits/99)/10;
 			$( "#ls-stats" ).append("<div class='row'><div class='col-3'><span>" + (i+1) + "</span></div><div class='col-3'><span>" + percentage +"</span></div><div class='col-3'><span>"+ total +"</span></div></div>");
 		});
 	}
@@ -148,7 +148,7 @@ function updateGUI(){
 	$("#double-stats").text(temp_d);
 	$("#triple-stats").text(temp_t);
 	if(darts_round < 3 || stored_rounds.length > 0){
-	var percentage = Math.round(10000*hits/thrown)/100;
+	var percentage = Math.round(1000*hits/thrown)/10;
 	$("#hits-stats").text(hits + "/" + thrown + " (" + percentage + "%)");
 	}
 	else{
