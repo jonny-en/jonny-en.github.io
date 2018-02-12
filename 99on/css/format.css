@@ -134,7 +134,8 @@ body {
 #stats-view{
 	position: absolute;
 	z-index: 100;
-	padding-top: 2%;
+	padding: 2% !important;	
+
 	top: 5%;
 	left: 5%;
 	height: 90%;
@@ -143,3 +144,16 @@ body {
 	background-color: rgba(0,0,0,0.9);
 	display: none;
 }
+
+ #stats-down{
+	position: absolute;
+	bottom: 0px;
+	background-color: rgba(255,255,255,0.2);
+}
+ #stats-up, #stats-down{
+	background-color: rgba(255,255,255,0.2);
+ }
+
+ .averages{
+ 	text-align: left;
+ }

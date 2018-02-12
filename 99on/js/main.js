@@ -5,31 +5,25 @@ $(document).ready(function(){
 	var active_round = [-1,-1,-1];
 	var stored_rounds = []; 
 	var darts_round = 3;
-		$( "#view-stats" ).click(function() {
-
-		var stats = []
-		stats = JSON.parse(localStorage.getItem("sessions"));
-		if(stats != null){
-			stats.forEach(function(game, i){
-
-				var total = 0;
-				var hits = 0;
-
-				game.forEach(function(r){
-					r.forEach(function(d){
-						total += d;
-
-						if(d != 0){
-							hits++;
-						}
-					});
-				});
-				var percentage = Math.round(1000*hits/99)/10;
-				$( "#ls-stats" ).append("<div class='row'><div class='col-4'><span>" + (i+1) + "</span></div><div class='col-4'><span>" + percentage +"</span></div><div class='col-4'><span>"+ total +"</span></div></div>");
-			});
+	var stats = []
+	var page = 0;
+	
+	$( "#stats-down" ).click(function() {
+		if(page+1 * 5 < stats.length){
+			page++;
+			$("#ls-stats").text("");
+			viewUpdateStats();
 		}
-		$( "#stats-view" ).fadeIn( "fast", function() {});
 	});
+	$( "#stats-up" ).click(function() {
+		if(page > 0){
+			page--;
+			$("#ls-stats").text("");
+			viewUpdateStats();
+		}
+	});
+	
+	$( "#view-stats" ).click(viewUpdateStats);
 
 	$( "#hide-stats" ).click(function() {
 		$( "#stats-view" ).fadeOut( "fast", function() {
@@ -102,6 +96,49 @@ $(document).ready(function(){
 		}
 		updateGUI();
 	});
+
+	function viewUpdateStats(){
+		
+		stats = JSON.parse(localStorage.getItem("sessions"));
+		if(stats != null){
+			var fdav = 0, sdav = 0, tdav = 0, adav = 0;
+
+			stats.forEach(function(game, i){
+				if(i < page*5+5 && i >= page*5 ){
+					var total = 0;
+					var hits = 0;
+
+					game.forEach(function(r){
+						r.forEach(function(d, j){
+							total += d;
+
+							if(d != 0){
+								hits++;
+								adav++;
+								if(j == 0){
+								  	fdav++;
+								}
+								if(j == 1){
+									sdav++;
+								}
+								if(j == 2){
+									tdav++;
+								}
+							}
+						});
+					});
+					var percentage = Math.round(1000*hits/99)/10;
+					$( "#ls-stats" ).append("<div class='row'><div class='col-4'><span>" + (i+1) + "</span></div><div class='col-4'><span>" + percentage +"</span></div><div class='col-4'><span>"+ total +"</span></div></div>");
+				}
+			});
+			$("#fdav").text(Math.round(1000*fdav/(33 * stats.length))/10 + "%");
+			$("#sdav").text(Math.round(1000*sdav/(33 * stats.length))/10 + "%");
+			$("#tdav").text(Math.round(1000*tdav/(33 * stats.length))/10 + "%");
+			$("#adav").text(Math.round(1000*adav/(99 * stats.length))/10 + "%");
+
+		}
+		$( "#stats-view" ).fadeIn( "fast", function() {});
+	}
 
 	function updateGUI(){
 		var temp_s = 0;
