@@ -102,6 +102,7 @@ $(document).ready(function(){
 		stats = JSON.parse(localStorage.getItem("sessions"));
 		if(stats != null){
 			var fdav = 0, sdav = 0, tdav = 0, adav = 0;
+			var fdpav = 0, sdpav = 0, tdpav = 0, adpav = 0;
 
 			stats.forEach(function(game, i){
 				if(i < page*5+5 && i >= page*5 ){
@@ -110,19 +111,22 @@ $(document).ready(function(){
 
 					game.forEach(function(r){
 						r.forEach(function(d, j){
-							total += d;
-
 							if(d != 0){
+								total += d;
+								adpav+=d;
 								hits++;
 								adav++;
 								if(j == 0){
 								  	fdav++;
+								  	fdpav += d;
 								}
 								if(j == 1){
 									sdav++;
+								  	sdpav += d;
 								}
 								if(j == 2){
 									tdav++;
+									tdpav += d;
 								}
 							}
 						});
@@ -136,6 +140,10 @@ $(document).ready(function(){
 			$("#tdav").text(Math.round(1000*tdav/(33 * stats.length))/10 + "%");
 			$("#adav").text(Math.round(1000*adav/(99 * stats.length))/10 + "%");
 
+			$("#fdpav").text(Math.round(10*fdpav/(33 * stats.length))/10 );
+			$("#sdpav").text(Math.round(10*sdpav/(33 * stats.length))/10 );
+			$("#tdpav").text(Math.round(10*tdpav/(33 * stats.length))/10 );
+			$("#adpav").text(Math.round(10*adpav/(99 * stats.length))/10 );
 		}
 		$( "#stats-view" ).fadeIn( "fast", function() {});
 	}

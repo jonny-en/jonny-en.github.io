@@ -13,6 +13,12 @@ body {
     overflow: hidden;
     width: 100%;
 }
+
+hr{
+	background-color: white;
+	margin-top: 1% !important;
+	margin-bottom: 0% !important;
+}
 .darts-app{
 	background-color: black !important;
     margin: 0%;   
@@ -155,5 +161,11 @@ body {
  }
 
  .averages{
+ 	background-color: rgba(0,100,190,0.4);
+ 	margin-top: 2%;
+ 	padding-left: 2%;
+ }
+
+ .avg{
  	text-align: left;
  }
